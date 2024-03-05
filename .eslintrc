@@ -1,0 +1,15 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["unused-imports", "@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "unused-imports/no-unused-imports-ts": "error"
+  },
+  "ignorePatterns": ["**/node_modules/", "**/dist/"]
+}
