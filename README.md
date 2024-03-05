@@ -15,7 +15,9 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
 
 - [Promises](#promises)
   - [`delay`](#delay)
-  - [`delay.fallback`](#delayfallback)
+    - [`delay.fallback`](#delayfallback)
+  - [`assert`](#assert)
+    - [`assert.defined`](#assertdefined)
   - [`never`](#never)
 
 ## Promises
@@ -44,6 +46,40 @@ import { delay } from '@rain-cafe/js-utils';
 const promise = delay(); // Returns a promise with a delay of 500ms
 delay.fallback(100);
 const promise = delay(); // Returns a promise with a delay of 100ms
+```
+
+### `assert`
+
+On its own assert isn't overly useful just because of how type assertion works.
+
+```tsx
+import { assert } from '@rain-cafe/js-utils';
+
+export async function example() {
+  const promise: Promise<string | undefined> = Promise.resolve('hello');
+  // Run an assertion on the promises response
+  const assertedPromise: Promise<string | undefined> = assert(promise, (value) => typeof value !== 'undefined');
+  // Unfortunately our response is still considered undefined because we can't forward the assertion
+}
+```
+
+### `assert.defined`
+
+Ensures the promise result is defined.
+
+```tsx
+import { assert } from '@rain-cafe/js-utils';
+
+export async function example() {
+  const promise: Promise<string | undefined> = Promise.resolve('hello');
+
+  // Run an assertion on the promises response
+  const assertedPromise: Promise<string> = assert.defined(promise);
+  // Our promise is no longer considered undefined!
+
+  // You can also pass a message to throw!
+  const assertedPromise: Promise<string> = assert.defined(promise, 'Expected our thing to exist!');
+}
 ```
 
 ### `never`
