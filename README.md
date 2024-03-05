@@ -15,6 +15,7 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
 
 - [Promises](#promises)
   - [`delay`](#delay)
+  - [`delay.fallback`](#delayfallback)
   - [`never`](#never)
 
 ## Promises
