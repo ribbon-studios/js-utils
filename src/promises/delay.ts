@@ -22,7 +22,9 @@ export async function delay<T>(promise?: Promise<T> | number, ms?: number): Prom
   return result;
 }
 
+/* c8 ignore start */
 export namespace delay {
+  /* c8 ignore end */
   /**
    * Overrides the default delay value
    */

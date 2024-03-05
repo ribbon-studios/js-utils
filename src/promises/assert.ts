@@ -14,7 +14,10 @@ export async function assert<P extends Promise<any>, V = P extends Promise<infer
   throw new Error(message ?? 'Value does not satisfy predicate');
 }
 
+/* c8 ignore start */
 export namespace assert {
+  /* c8 ignore end */
+
   /**
    * Ensures a promise result is defined
    * @returns The original promise
