@@ -1,6 +1,7 @@
 {
-  "name": "@rain-cafe/js-utils",
+  "name": "@ribbon-studios/js-utils",
   "version": "1.0.0",
+  "description": "Collection of generic javascript utilities curated by the Rainbow Cafe~",
   "type": "module",
   "source": "src/*.ts",
   "main": "./dist/index.cjs",
@@ -48,7 +49,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rain-cafe/js-utils.git"
+    "url": "git+https://github.com/ribbon-studios/js-utils.git"
   },
   "license": "MIT"
 }
