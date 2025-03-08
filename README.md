@@ -19,6 +19,8 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
   - [`assert`](#assert)
     - [`assert.defined`](#assertdefined)
   - [`never`](#never)
+- [Fetch](#fetch)
+  - [`rfetch`](#rfetch)
 
 ## Promises
 
@@ -94,6 +96,39 @@ import { never } from '@ribbon-studios/js-utils';
 
 const promise = never(); // Returns a promise that never resolves
 const promise = never(Promise.resolve('hello')); // Returns a promise that never resolves
+```
+
+## Fetch
+
+### `rfetch`
+
+Lightweight wrapper around fetch that automatically handles:
+
+- Query Params
+- Form Data & JSON bodies
+- JSON Responses (fallsback to text)
+- Type Casting
+- Errors
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+try {
+  const response = await rfetch<MyExpectedResponse>('https://ribbonstudios.com', {
+    params: {
+      hello: 'world',
+    },
+    body: {
+      hallo: 'welt',
+    },
+  });
+
+  console.log(response);
+  // => MyExpectedResponse
+} catch (error: RibbonFetchError<MyExpectedErrorResponse>) {
+  console.error(error);
+  // => { status: number; content: MyExpectedErrorResponse; }
+}
 ```
 
 [_**Want to Contribute?**_](/CONTRIBUTING.md)

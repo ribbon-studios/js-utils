@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, MockInstance, Mocked, beforeEach } from 'vitest';
-import { rfetch } from '../rfetch';
+import { rfetch, type RibbonFetchError } from '../rfetch';
 
 type DeepPartial<T> = T extends object
   ? {
@@ -146,7 +146,7 @@ describe('utils(Fetch)', () => {
       await expect(rfetch('https://ribbonstudios.com')).rejects.toEqual({
         status: 500,
         content: expectedResponse,
-      });
+      } satisfies RibbonFetchError<typeof expectedResponse>);
     });
 
     it('should support errors', async () => {

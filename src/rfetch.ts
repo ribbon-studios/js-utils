@@ -7,6 +7,11 @@ export type RibbonFetchOptions = {
   headers?: HeadersInit;
 } & Omit<RequestInit, 'body' | 'headers' | 'method'>;
 
+export type RibbonFetchError<R> = {
+  status: number;
+  content: R;
+};
+
 /**
  * A lightweight wrapper around fetch to simplify its usage.
  *
@@ -65,5 +70,5 @@ export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOp
   return Promise.reject({
     status: response.status,
     content,
-  });
+  } satisfies RibbonFetchError<any>);
 }
