@@ -8,9 +8,9 @@ type DeepPartial<T> = T extends object
   : T;
 
 describe('utils(Fetch)', () => {
-  let fetchSpy: MockInstance<[input: RequestInfo | URL, init?: RequestInit], Promise<Response>>;
+  let fetchSpy: MockInstance<typeof fetch>;
 
-  const mockFetch = (overrides?: DeepPartial<Mocked<Response>>) => {
+  const mockFetch = (overrides?: DeepPartial<Response>) => {
     fetchSpy.mockResolvedValue({
       ok: true,
       text: vi.fn(),

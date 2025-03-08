@@ -3,7 +3,7 @@
 pkgs.mkShell {
   buildInputs = with pkgs; [
     gnumake
-    nodejs_20
+    nodejs_22
     bun
   ];
 }

@@ -76,6 +76,7 @@ export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOp
     content,
   } satisfies RibbonFetchError<any>);
 }
+
 /* c8 ignore start */
 export namespace rfetch {
   /* c8 ignore end */
