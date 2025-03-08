@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, MockInstance, Mocked, beforeEach } from 'vitest';
+import { describe, it, expect, vi, MockInstance, beforeEach } from 'vitest';
 import { rfetch, type RibbonFetchError } from '../rfetch';
 
 type DeepPartial<T> = T extends object
