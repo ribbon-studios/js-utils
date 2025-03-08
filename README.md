@@ -202,7 +202,7 @@ await rfetch.remove<MyExpectedResponse>('https://ribbonstudios.com');
 [coveralls-url]: https://coveralls.io/github/ribbon-studios/js-utils?branch=main
 [code-style-image]: https://img.shields.io/badge/code%20style-prettier-ff69b4.svg
 [code-style-url]: https://prettier.io
-[maintainability-image]: https://img.shields.io/codeclimate/maintainability/ribbon-studios/refreshly
-[maintainability-url]: https://codeclimate.com/github/ribbon-studios/refreshly/maintainability
+[maintainability-image]: https://img.shields.io/codeclimate/maintainability/ribbon-studios/js-utils
+[maintainability-url]: https://codeclimate.com/github/ribbon-studios/js-utils/maintainability
 [semantic-release-url]: https://github.com/semantic-release/semantic-release
 [semantic-release-image]: https://img.shields.io/badge/%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079
