@@ -21,6 +21,11 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
   - [`never`](#never)
 - [Fetch](#fetch)
   - [`rfetch`](#rfetch)
+    - [`rfetch.get`](#rfetchget)
+    - [`rfetch.put`](#rfetchput)
+    - [`rfetch.post`](#rfetchpost)
+    - [`rfetch.patch`](#rfetchpatch)
+    - [`rfetch.remove`](#rfetchremove)
 
 ## Promises
 
@@ -129,6 +134,61 @@ try {
   console.error(error);
   // => { status: number; content: MyExpectedErrorResponse; }
 }
+```
+
+### `rfetch.get`
+
+Shorthand for GET requests.
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+// Shorthand for GET requests.
+await rfetch.get<MyExpectedResponse>('https://ribbonstudios.com');
+```
+
+### `rfetch.put`
+
+Shorthand for PUT requests.
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+// Shorthand for PUT requests.
+await rfetch.put<MyExpectedResponse>('https://ribbonstudios.com');
+```
+
+### `rfetch.post`
+
+Shorthand for POST requests.
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+// Shorthand for POST requests.
+await rfetch.post<MyExpectedResponse>('https://ribbonstudios.com');
+```
+
+### `rfetch.patch`
+
+Shorthand for PATCH requests.
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+// Shorthand for PATCH requests.
+await rfetch.patch<MyExpectedResponse>('https://ribbonstudios.com');
+```
+
+### `rfetch.remove`
+
+Shorthand for DELETE requests.
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+// Shorthand for DELETE requests.
+await rfetch.remove<MyExpectedResponse>('https://ribbonstudios.com');
 ```
 
 [_**Want to Contribute?**_](/CONTRIBUTING.md)

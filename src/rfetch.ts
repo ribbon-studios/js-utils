@@ -7,6 +7,10 @@ export type RibbonFetchOptions = {
   headers?: HeadersInit;
 } & Omit<RequestInit, 'body' | 'headers' | 'method'>;
 
+export type RibbonFetchBasicOptions = Omit<RibbonFetchOptions, 'method' | 'body'>;
+
+export type RibbonFetchBodyOptions = Omit<RibbonFetchOptions, 'method'>;
+
 export type RibbonFetchError<R> = {
   status: number;
   content: R;
@@ -71,4 +75,79 @@ export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOp
     status: response.status,
     content,
   } satisfies RibbonFetchError<any>);
+}
+/* c8 ignore start */
+export namespace rfetch {
+  /* c8 ignore end */
+
+  /**
+   * Shorthand method for a GET request
+   *
+   * @param url The url you wish to fetch.
+   * @param options The request options.
+   * @returns The typed response or an error containing the `status` and the `content`
+   */
+  export async function get<T>(url: string | URL, options?: RibbonFetchBasicOptions) {
+    return rfetch<T>(url, {
+      ...options,
+      method: 'GET',
+    });
+  }
+
+  /**
+   * Shorthand method for a PUT request
+   *
+   * @param url The url you wish to fetch.
+   * @param options The request options.
+   * @returns The typed response or an error containing the `status` and the `content`
+   */
+  export async function put<T>(url: string | URL, options?: RibbonFetchBodyOptions) {
+    return rfetch<T>(url, {
+      ...options,
+      method: 'PUT',
+    });
+  }
+
+  /**
+   * Shorthand method for a POST request
+   *
+   * @param url The url you wish to fetch.
+   * @param options The request options.
+   * @returns The typed response or an error containing the `status` and the `content`
+   */
+  export async function post<T>(url: string | URL, options?: RibbonFetchBodyOptions) {
+    return rfetch<T>(url, {
+      ...options,
+      method: 'POST',
+    });
+  }
+
+  /**
+   * Shorthand method for a PATCH request
+   *
+   * @param url The url you wish to fetch.
+   * @param options The request options.
+   * @returns The typed response or an error containing the `status` and the `content`
+   */
+  export async function patch<T>(url: string | URL, options?: RibbonFetchBodyOptions) {
+    return rfetch<T>(url, {
+      ...options,
+      method: 'PATCH',
+    });
+  }
+
+  /**
+   * Shorthand method for a DELETE request
+   *
+   * @param url The url you wish to fetch.
+   * @param options The request options.
+   * @returns The typed response or an error containing the `status` and the `content`
+   * @note This is named `remove` purely because `delete` is a reserved key
+   */
+  export async function remove<T>(url: string | URL, options?: RibbonFetchBodyOptions) {
+    return rfetch<T>(url, {
+      ...options,
+      method: 'DELETE',
+    });
+  }
 }

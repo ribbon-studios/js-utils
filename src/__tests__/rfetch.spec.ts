@@ -166,4 +166,69 @@ describe('utils(Fetch)', () => {
       });
     });
   });
+
+  describe('fn(rfetch.get)', () => {
+    it('should be a shorthand for get requests', async () => {
+      await rfetch.get('https://ribbonstudios.com');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          method: 'GET',
+        })
+      );
+    });
+  });
+
+  describe('fn(rfetch.put)', () => {
+    it('should be a shorthand for put requests', async () => {
+      await rfetch.put('https://ribbonstudios.com');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          method: 'PUT',
+        })
+      );
+    });
+  });
+
+  describe('fn(rfetch.post)', () => {
+    it('should be a shorthand for post requests', async () => {
+      await rfetch.post('https://ribbonstudios.com');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+    });
+  });
+
+  describe('fn(rfetch.patch)', () => {
+    it('should be a shorthand for patch requests', async () => {
+      await rfetch.patch('https://ribbonstudios.com');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          method: 'PATCH',
+        })
+      );
+    });
+  });
+
+  describe('fn(rfetch.remove)', () => {
+    it('should be a shorthand for delete requests', async () => {
+      await rfetch.remove('https://ribbonstudios.com');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          method: 'DELETE',
+        })
+      );
+    });
+  });
 });
