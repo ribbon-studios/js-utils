@@ -17,5 +17,6 @@
   "editor.formatOnType": false,
   "editor.formatOnSaveMode": "file",
   "files.autoSave": "onFocusChange",
-  "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix"
+  "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^node:"]
 }
