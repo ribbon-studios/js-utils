@@ -19,6 +19,7 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
   - [`assert`](#assert)
     - [`assert.defined`](#assertdefined)
   - [`never`](#never)
+  - [`retry`](#retry)
 - [Fetch](#fetch)
   - [`rfetch`](#rfetch)
     - [`rfetch.get`](#rfetchget)
@@ -101,6 +102,18 @@ import { never } from '@ribbon-studios/js-utils';
 
 const promise = never(); // Returns a promise that never resolves
 const promise = never(Promise.resolve('hello')); // Returns a promise that never resolves
+```
+
+### `retry`
+
+Retries a function `n` times until it resolves successfully.
+This can be useful for requests that tend to be flaky.
+
+```tsx
+import { retry } from '@ribbon-studios/js-utils';
+
+// Returns a promise that resolves when the request is successful or fails after its exceeded that maximum attempts.
+const promise = retry(() => getMaps(), 5);
 ```
 
 ## Fetch

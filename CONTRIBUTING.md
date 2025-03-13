@@ -5,7 +5,7 @@ Then this is the perfect place for you!
 
 ## Prerequisites
 
-- NodeJS 18
+- NodeJS 22
 
 ## Setting Up Locally
 
