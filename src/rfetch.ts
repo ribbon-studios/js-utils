@@ -16,10 +16,7 @@ export type RibbonFetchError<R> = {
   content: R;
 };
 
-export type RibbonFetchInterceptor = (
-  url: URL,
-  options: RequestInit
-) => RibbonFetchOptions | Promise<RibbonFetchOptions>;
+export type RibbonFetchInterceptor = (url: URL, options: RequestInit) => RequestInit | Promise<RequestInit>;
 
 let fetchInterceptors: RibbonFetchInterceptor[] = [];
 
