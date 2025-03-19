@@ -1,8 +1,6 @@
-type RibbonFetchParamType = string | number | boolean;
-
 export type RibbonFetchOptions = {
   method?: 'GET' | 'PUT' | 'POST' | 'PATCH' | 'DELETE';
-  params?: Record<string, RibbonFetchParamType | RibbonFetchParamType[]>;
+  params?: Record<string, any>;
   body?: any;
   headers?: HeadersInit;
 } & Omit<RequestInit, 'body' | 'headers' | 'method'>;
