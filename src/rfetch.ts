@@ -16,6 +16,13 @@ export type RibbonFetchError<R> = {
   content: R;
 };
 
+export type RibbonFetchInterceptor = (
+  url: URL,
+  options: RequestInit
+) => RibbonFetchOptions | Promise<RibbonFetchOptions>;
+
+let fetchInterceptors: RibbonFetchInterceptor[] = [];
+
 /**
  * A lightweight wrapper around fetch to simplify its usage.
  *
@@ -23,7 +30,10 @@ export type RibbonFetchError<R> = {
  * @param options The request options.
  * @returns The typed response or an error containing the `status` and the `content`
  */
-export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOptions): Promise<T> {
+export async function rfetch<T = any, O extends RibbonFetchOptions = RibbonFetchOptions>(
+  url: string | URL,
+  options?: O
+): Promise<T> {
   const requestInit: RequestInit = {
     method: options?.method ?? 'GET',
   };
@@ -67,7 +77,13 @@ export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOp
     }
   }
 
-  const response = await fetch(internalURL, requestInit);
+  const response = await fetch(
+    internalURL,
+    await fetchInterceptors.reduce(
+      async (output, interceptor) => await interceptor(internalURL, await output),
+      Promise.resolve(requestInit)
+    )
+  );
 
   // Dynamically determine the content we received and parse it accordingly.
   const content = response.headers.get('Content-Type')?.toLowerCase()?.includes('json')
@@ -158,4 +174,22 @@ export namespace rfetch {
       method: 'DELETE',
     });
   }
+
+  export const interceptors = {
+    add(interceptor: RibbonFetchInterceptor) {
+      fetchInterceptors.push(interceptor);
+    },
+
+    remove(interceptor: RibbonFetchInterceptor) {
+      const index = fetchInterceptors.indexOf(interceptor);
+
+      if (index === -1) return;
+
+      fetchInterceptors.splice(index, 1);
+    },
+
+    clear() {
+      fetchInterceptors = [];
+    },
+  };
 }

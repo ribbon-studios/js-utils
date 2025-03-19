@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, MockInstance, beforeEach } from 'vitest';
+import { describe, it, expect, vi, MockInstance, beforeEach, afterEach } from 'vitest';
 import { rfetch, type RibbonFetchError } from '../rfetch';
 
 type DeepPartial<T> = T extends object
@@ -26,6 +26,10 @@ describe('utils(Fetch)', () => {
   beforeEach(() => {
     fetchSpy = vi.spyOn(window, 'fetch');
     mockFetch();
+  });
+
+  afterEach(() => {
+    rfetch.interceptors.clear();
   });
 
   describe('fn(rfetch)', () => {
@@ -272,6 +276,101 @@ describe('utils(Fetch)', () => {
           method: 'DELETE',
         })
       );
+    });
+  });
+
+  describe('fn(rfetch.interceptors.add)', () => {
+    it('should support interceptors', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.add(interceptor);
+
+      await rfetch.get(expectedUrl);
+
+      expect(interceptor).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+
+    it('should support interceptors that change the request options', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => ({
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }));
+
+      rfetch.interceptors.add(interceptor);
+
+      await rfetch.get('https://ribbonstudios.com');
+
+      expect(interceptor).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    });
+  });
+
+  describe('fn(rfetch.interceptors.remove)', () => {
+    it('should support removing interceptors', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.add(interceptor);
+      rfetch.interceptors.remove(interceptor);
+
+      await rfetch.get(expectedUrl);
+
+      expect(interceptor).not.toHaveBeenCalled();
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+
+    it('should ignore removing interceptors that do not exist', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.remove(interceptor);
+
+      await rfetch.get(expectedUrl);
+
+      expect(interceptor).not.toHaveBeenCalled();
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+  });
+
+  describe('fn(rfetch.interceptors.clear)', () => {
+    it('should support clearing the interceptors', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.add(interceptor);
+      rfetch.interceptors.clear();
+
+      await rfetch.get(expectedUrl);
+
+      expect(interceptor).not.toHaveBeenCalled();
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
     });
   });
 });

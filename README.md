@@ -27,6 +27,7 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
     - [`rfetch.post`](#rfetchpost)
     - [`rfetch.patch`](#rfetchpatch)
     - [`rfetch.remove`](#rfetchremove)
+    - [`rfetch.interceptors`](#rfetchinterceptors)
 
 ## Promises
 
@@ -202,6 +203,22 @@ import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
 
 // Shorthand for DELETE requests.
 await rfetch.remove<MyExpectedResponse>('https://ribbonstudios.com');
+```
+
+### `rfetch.interceptors`
+
+Useful for enhancing requests with additional information
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+const interceptor = (url: URL, options: RequestInit): RequestInit | Promise<RequestInit> => {
+  return options; // Return the modified options!
+};
+
+rfetch.interceptors.add(interceptor); // Add the interceptor
+rfetch.interceptors.remove(interceptor); // Remove the interceptor
+rfetch.interceptors.clear(); // Clear all interceptors
 ```
 
 [_**Want to Contribute?**_](/CONTRIBUTING.md)
