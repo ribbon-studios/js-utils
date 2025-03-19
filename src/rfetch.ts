@@ -24,18 +24,16 @@ export type RibbonFetchError<R> = {
  * @returns The typed response or an error containing the `status` and the `content`
  */
 export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOptions): Promise<T> {
-  const { params, headers, body, ...internalOptions } = {
-    method: 'GET',
-    headers: {},
-    ...options,
+  const requestInit: RequestInit = {
+    method: options?.method ?? 'GET',
   };
 
   // Standardize our url to the `URL` type
   const internalURL = url instanceof URL ? url : new URL(url, url.startsWith('/') ? location.origin : undefined);
 
   // Apply the query params to the url.
-  if (params) {
-    for (const [key, values] of Object.entries(params)) {
+  if (options?.params) {
+    for (const [key, values] of Object.entries(options.params)) {
       if (Array.isArray(values)) {
         for (const value of values) {
           internalURL.searchParams.append(key, value.toString());
@@ -46,21 +44,30 @@ export async function rfetch<T = any>(url: string | URL, options?: RibbonFetchOp
     }
   }
 
-  let internalBody: string | FormData | undefined = undefined;
-
   // Dynamically determine the content-type based upon the data provided to us.
-  if (body) {
-    internalBody = body instanceof FormData ? body : JSON.stringify(body);
+  if (requestInit.method !== 'GET' && options?.body) {
+    if (options.body instanceof FormData) {
+      requestInit.body = options.body;
+      requestInit.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...requestInit.headers,
+      };
+    } else if (typeof options.body === 'string') {
+      requestInit.body = options.body;
+      requestInit.headers = {
+        'Content-Type': 'application/json',
+        ...requestInit.headers,
+      };
+    } else {
+      requestInit.body = JSON.stringify(options.body);
+      requestInit.headers = {
+        'Content-Type': 'application/json',
+        ...requestInit.headers,
+      };
+    }
   }
 
-  const response = await fetch(internalURL, {
-    ...internalOptions,
-    headers: {
-      'Content-Type': internalBody instanceof FormData ? 'application/x-www-form-urlencoded' : 'application/json',
-      ...headers,
-    },
-    body: internalBody,
-  });
+  const response = await fetch(internalURL, requestInit);
 
   // Dynamically determine the content we received and parse it accordingly.
   const content = response.headers.get('Content-Type')?.toLowerCase()?.includes('json')

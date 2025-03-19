@@ -34,7 +34,9 @@ describe('utils(Fetch)', () => {
 
       await rfetch(expectedUrl);
 
-      expect(fetchSpy).toHaveBeenCalledWith(new URL(expectedUrl, location.origin), expect.anything());
+      expect(fetchSpy).toHaveBeenCalledWith(new URL(expectedUrl, location.origin), {
+        method: 'GET',
+      });
     });
 
     it('should support absolute requests', async () => {
@@ -42,7 +44,9 @@ describe('utils(Fetch)', () => {
 
       await rfetch(expectedUrl);
 
-      expect(fetchSpy).toHaveBeenCalledWith(new URL(expectedUrl), expect.anything());
+      expect(fetchSpy).toHaveBeenCalledWith(new URL(expectedUrl), {
+        method: 'GET',
+      });
     });
 
     it('should support the URL type', async () => {
@@ -50,7 +54,9 @@ describe('utils(Fetch)', () => {
 
       await rfetch(expectedUrl);
 
-      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, expect.anything());
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
     });
 
     it('should support query params', async () => {
@@ -68,7 +74,9 @@ describe('utils(Fetch)', () => {
       url.searchParams.append('hello', 'world');
       url.searchParams.append('hello', 'welt');
 
-      expect(fetchSpy).toHaveBeenCalledWith(url, expect.anything());
+      expect(fetchSpy).toHaveBeenCalledWith(url, {
+        method: 'GET',
+      });
     });
 
     it('should support json requests', async () => {
@@ -77,12 +85,32 @@ describe('utils(Fetch)', () => {
       };
 
       await rfetch('https://ribbonstudios.com', {
+        method: 'POST',
         body: expectedRequest,
       });
 
-      expect(fetchSpy).toHaveBeenCalledWith(expect.any(URL), {
-        method: 'GET',
+      expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
+        method: 'POST',
         body: JSON.stringify(expectedRequest),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    });
+
+    it('should support already stringified json requests', async () => {
+      const expectedRequest = JSON.stringify({
+        hello: 'world',
+      });
+
+      await rfetch('https://ribbonstudios.com', {
+        method: 'POST',
+        body: expectedRequest,
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
+        method: 'POST',
+        body: expectedRequest,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -93,15 +121,30 @@ describe('utils(Fetch)', () => {
       const expectedRequest = new FormData();
 
       await rfetch('https://ribbonstudios.com', {
+        method: 'POST',
         body: expectedRequest,
       });
 
-      expect(fetchSpy).toHaveBeenCalledWith(expect.any(URL), {
-        method: 'GET',
+      expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
+        method: 'POST',
         body: expectedRequest,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
+      });
+    });
+
+    it('should ignore get requests with a body', async () => {
+      const expectedRequest = {
+        hello: 'world',
+      };
+
+      await rfetch('https://ribbonstudios.com', {
+        body: expectedRequest,
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
+        method: 'GET',
       });
     });
 
