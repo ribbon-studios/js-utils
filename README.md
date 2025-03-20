@@ -11,7 +11,7 @@
 
 # JS Utils 🔧
 
-Collection of generic javascript utilities curated by the Rainbow Cafe~
+Collection of generic javascript utilities curated by the Ribbon Studios Team~
 
 - [Promises](#promises)
   - [`delay`](#delay)
