@@ -28,6 +28,7 @@ Collection of generic javascript utilities curated by the Rainbow Cafe~
     - [`rfetch.patch`](#rfetchpatch)
     - [`rfetch.remove`](#rfetchremove)
     - [`rfetch.interceptors`](#rfetchinterceptors)
+    - [`rfetch.delimiters`](#rfetchdelimiters)
 
 ## Promises
 
@@ -219,6 +220,33 @@ const interceptor = (url: URL, options: RequestInit): RequestInit | Promise<Requ
 rfetch.interceptors.add(interceptor); // Add the interceptor
 rfetch.interceptors.remove(interceptor); // Remove the interceptor
 rfetch.interceptors.clear(); // Clear all interceptors
+```
+
+### `rfetch.delimiters`
+
+Specifies which delimiters should be used.
+
+```tsx
+import { rfetch, DelimiterType } from '@ribbon-studios/js-utils';
+
+rfetch.delimiters(DelimiterType.DUPLICATE); // Use duplicate query params
+
+// This is the default functionality
+// https://ribbonstudios.com?hello=world&hello=welt
+await rfetch.get('https://ribbonstudios.com', {
+  params: {
+    hello: ['world', 'welt'],
+  },
+});
+
+rfetch.delimiters(DelimiterType.COMMA); // Use comma separators
+
+// https://ribbonstudios.com?hello=world,welt
+await rfetch.get('https://ribbonstudios.com', {
+  params: {
+    hello: ['world', 'welt'],
+  },
+});
 ```
 
 [_**Want to Contribute?**_](/CONTRIBUTING.md)

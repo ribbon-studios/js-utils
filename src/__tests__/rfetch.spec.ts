@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, MockInstance, beforeEach, afterEach } from 'vitest';
-import { rfetch, type RibbonFetchError } from '../rfetch';
+import { DelimiterType, rfetch, type RibbonFetchError } from '../rfetch';
 
 type DeepPartial<T> = T extends object
   ? {
@@ -24,6 +24,7 @@ describe('utils(Fetch)', () => {
   };
 
   beforeEach(() => {
+    rfetch.delimiters(DelimiterType.DUPLICATE);
     fetchSpy = vi.spyOn(window, 'fetch');
     mockFetch();
   });
@@ -77,6 +78,25 @@ describe('utils(Fetch)', () => {
       url.searchParams.set('ribbon', 'studios');
       url.searchParams.append('hello', 'world');
       url.searchParams.append('hello', 'welt');
+
+      expect(fetchSpy).toHaveBeenCalledWith(url, {
+        method: 'GET',
+      });
+    });
+
+    it('should support using comma delimiters', async () => {
+      rfetch.delimiters(DelimiterType.COMMA);
+
+      const expectedUrl = 'https://ribbonstudios.com';
+
+      await rfetch(expectedUrl, {
+        params: {
+          hello: ['world', 'welt'],
+        },
+      });
+
+      const url = new URL(expectedUrl);
+      url.searchParams.set('hello', ['world', 'welt'].join(','));
 
       expect(fetchSpy).toHaveBeenCalledWith(url, {
         method: 'GET',

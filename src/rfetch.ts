@@ -16,7 +16,13 @@ export type RibbonFetchError<R> = {
 
 export type RibbonFetchInterceptor = (url: URL, options: RequestInit) => RequestInit | Promise<RequestInit>;
 
+export enum DelimiterType {
+  COMMA,
+  DUPLICATE,
+}
+
 let fetchInterceptors: RibbonFetchInterceptor[] = [];
+let delimiter: DelimiterType = DelimiterType.DUPLICATE;
 
 /**
  * A lightweight wrapper around fetch to simplify its usage.
@@ -41,8 +47,15 @@ export async function rfetch<T = any>(
   if (params) {
     for (const [key, values] of Object.entries(params)) {
       if (Array.isArray(values)) {
-        for (const value of values) {
-          internalURL.searchParams.append(key, value.toString());
+        switch (delimiter) {
+          case DelimiterType.COMMA:
+            internalURL.searchParams.set(key, values.map((value) => value.toString()).join(','));
+            break;
+          case DelimiterType.DUPLICATE:
+            values.forEach((value) => {
+              internalURL.searchParams.append(key, value.toString());
+            });
+            break;
         }
       } else {
         internalURL.searchParams.append(key, values.toString());
@@ -166,6 +179,10 @@ export namespace rfetch {
       ...options,
       method: 'DELETE',
     });
+  }
+
+  export async function delimiters(type: DelimiterType) {
+    delimiter = type;
   }
 
   export const interceptors = {
