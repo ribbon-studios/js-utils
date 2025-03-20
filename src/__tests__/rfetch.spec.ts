@@ -179,6 +179,21 @@ describe('utils(Fetch)', () => {
       await expect(rfetch('https://ribbonstudios.com')).resolves.toEqual(expectedResponse);
     });
 
+    it('should support custom headers', async () => {
+      await rfetch('https://ribbonstudios.com', {
+        headers: {
+          MyCustomHeader: 'value',
+        },
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
+        method: 'GET',
+        headers: {
+          MyCustomHeader: 'value',
+        },
+      });
+    });
+
     it('should support errors', async () => {
       const expectedResponse = {
         hello: 'world',
