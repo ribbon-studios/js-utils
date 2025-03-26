@@ -45,20 +45,19 @@ export async function rfetch<T = any>(
 
   // Apply the query params to the url.
   if (params) {
-    for (const [key, values] of Object.entries(params)) {
-      if (Array.isArray(values)) {
-        switch (delimiter) {
-          case DelimiterType.COMMA:
-            internalURL.searchParams.set(key, values.map((value) => value.toString()).join(','));
-            break;
-          case DelimiterType.DUPLICATE:
-            values.forEach((value) => {
-              internalURL.searchParams.append(key, value.toString());
-            });
-            break;
-        }
-      } else {
-        internalURL.searchParams.append(key, values.toString());
+    for (const [key, value] of Object.entries(params)) {
+      let values = Array.isArray(value) ? value : [value];
+      values = values.filter((value) => ![undefined, null].includes(value));
+
+      switch (delimiter) {
+        case DelimiterType.COMMA:
+          internalURL.searchParams.set(key, values.map((value) => value.toString()).join(','));
+          break;
+        case DelimiterType.DUPLICATE:
+          values.forEach((value) => {
+            internalURL.searchParams.append(key, value.toString());
+          });
+          break;
       }
     }
   }

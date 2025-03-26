@@ -71,6 +71,8 @@ describe('utils(Fetch)', () => {
         params: {
           ribbon: 'studios',
           hello: ['world', 'welt'],
+          nullParam: null,
+          undefinedParam: undefined,
         },
       });
 
