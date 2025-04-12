@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, expectTypeOf } from 'vitest';
 import { never } from '../never';
 
 describe('fn(never)', () => {
@@ -34,5 +34,23 @@ describe('fn(never)', () => {
       `Promise is being called via "never", please ensure this doesn't get deployed!`,
       expectedPromise
     );
+  });
+
+  it('should return the type that is provided to it', async () => {
+    vi.spyOn(console, 'warn').mockReturnValue();
+    const expectedPromise = Promise.resolve('hello');
+
+    const promise = never(expectedPromise);
+
+    expectTypeOf(promise).toEqualTypeOf<Promise<string>>();
+  });
+
+  it('should return the type that is provided to it', async () => {
+    vi.spyOn(console, 'warn').mockReturnValue();
+    const expectedPromise = Promise.resolve();
+
+    const promise = never(expectedPromise);
+
+    expectTypeOf(promise).toEqualTypeOf<Promise<void>>();
   });
 });
