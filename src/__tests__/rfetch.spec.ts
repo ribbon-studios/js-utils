@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, MockInstance, beforeEach, afterEach } from 'vitest';
-import { DelimiterType, rfetch, type RibbonFetchError } from '../rfetch';
+import { DelimiterType, rfetch, RibbonFetchError } from '../rfetch';
 
 type DeepPartial<T> = T extends object
   ? {
@@ -227,10 +227,12 @@ describe('utils(Fetch)', () => {
         json: vi.fn().mockResolvedValue(expectedResponse),
       });
 
-      await expect(rfetch('https://ribbonstudios.com')).rejects.toEqual({
-        status: 500,
-        content: expectedResponse,
-      } satisfies RibbonFetchError<typeof expectedResponse>);
+      await expect(rfetch('https://ribbonstudios.com')).rejects.toEqual(
+        new RibbonFetchError({
+          status: 500,
+          content: expectedResponse,
+        })
+      );
     });
 
     it('should support errors', async () => {
@@ -244,10 +246,12 @@ describe('utils(Fetch)', () => {
         json: vi.fn().mockResolvedValue(expectedResponse),
       });
 
-      await expect(rfetch('https://ribbonstudios.com')).rejects.toEqual({
-        status: 500,
-        content: expectedResponse,
-      });
+      await expect(rfetch('https://ribbonstudios.com')).rejects.toEqual(
+        new RibbonFetchError({
+          status: 500,
+          content: expectedResponse,
+        })
+      );
     });
   });
 
@@ -408,6 +412,23 @@ describe('utils(Fetch)', () => {
       expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
         method: 'GET',
       });
+    });
+  });
+
+  describe('fn(rfetch.is.error)', () => {
+    it('should return true if the value is the error type', () => {
+      const error = new RibbonFetchError({
+        status: 500,
+        content: 'hello world',
+      });
+
+      expect(rfetch.is.error(error)).toEqual(true);
+    });
+
+    it('should return false if the value is not the error type', () => {
+      const error = 'hello world';
+
+      expect(rfetch.is.error(error)).toEqual(false);
     });
   });
 });

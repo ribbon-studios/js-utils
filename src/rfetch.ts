@@ -9,10 +9,16 @@ export type RibbonFetchBasicOptions = Omit<RibbonFetchOptions, 'method' | 'body'
 
 export type RibbonFetchBodyOptions = Omit<RibbonFetchOptions, 'method'>;
 
-export type RibbonFetchError<R> = {
-  status: number;
-  content: R;
-};
+export class RibbonFetchError<R> extends Error {
+  public status: number;
+  public content: R;
+
+  constructor({ status, content }: { status: number; content: R }) {
+    super();
+    this.status = status;
+    this.content = content;
+  }
+}
 
 export type RibbonFetchInterceptor = (url: URL, options: RequestInit) => RequestInit | Promise<RequestInit>;
 
@@ -99,10 +105,12 @@ export async function rfetch<T = any>(
     return content;
   }
 
-  return Promise.reject({
-    status: response.status,
-    content,
-  } satisfies RibbonFetchError<any>);
+  return Promise.reject(
+    new RibbonFetchError({
+      status: response.status,
+      content,
+    })
+  );
 }
 
 /* c8 ignore start */
@@ -201,4 +209,10 @@ export namespace rfetch {
       fetchInterceptors = [];
     },
   };
+
+  export namespace is {
+    export function error<T = any>(value: any): value is RibbonFetchError<T> {
+      return value instanceof RibbonFetchError;
+    }
+  }
 }

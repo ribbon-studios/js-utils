@@ -249,6 +249,24 @@ await rfetch.get('https://ribbonstudios.com', {
 });
 ```
 
+### `rfetch.is.error`
+
+A type guard that helps determine if the error is from a `rfetch` response.
+
+```ts
+import { rfetch } from '@ribbon-studios/js-utils';
+
+try {
+  await rfetch.get('https://ribbonstudios.com');
+} catch (error: any) {
+  if (rfetch.is.error(error) && error.status === 404) {
+    // Do something!
+  }
+
+  throw error;
+}
+```
+
 [_**Want to Contribute?**_](/CONTRIBUTING.md)
 
 [npm-version-image]: https://img.shields.io/npm/v/@ribbon-studios/js-utils.svg
