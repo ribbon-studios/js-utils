@@ -74,16 +74,19 @@ export async function rfetch<T = any>(
       requestInit.body = body;
       requestInit.headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
+        ...requestInit.headers,
       };
     } else if (typeof body === 'string') {
       requestInit.body = body;
       requestInit.headers = {
         'Content-Type': 'application/json',
+        ...requestInit.headers,
       };
     } else {
       requestInit.body = JSON.stringify(body);
       requestInit.headers = {
         'Content-Type': 'application/json',
+        ...requestInit.headers,
       };
     }
   }

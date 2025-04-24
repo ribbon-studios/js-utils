@@ -160,6 +160,26 @@ describe('utils(Fetch)', () => {
       });
     });
 
+    it('should support overriding the content type', async () => {
+      const expectedRequest = new FormData();
+
+      await rfetch('https://ribbonstudios.com', {
+        method: 'POST',
+        body: expectedRequest,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
+        method: 'POST',
+        body: expectedRequest,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    });
+
     it('should ignore get requests with a body', async () => {
       const expectedRequest = {
         hello: 'world',
