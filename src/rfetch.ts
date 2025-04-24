@@ -72,10 +72,6 @@ export async function rfetch<T = any>(
   if (requestInit.method !== 'GET' && body) {
     if (body instanceof FormData) {
       requestInit.body = body;
-      requestInit.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        ...requestInit.headers,
-      };
     } else if (typeof body === 'string') {
       requestInit.body = body;
       requestInit.headers = {

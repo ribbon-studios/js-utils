@@ -154,28 +154,27 @@ describe('utils(Fetch)', () => {
       expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
         method: 'POST',
         body: expectedRequest,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
       });
     });
 
     it('should support overriding the content type', async () => {
-      const expectedRequest = new FormData();
+      const expectedRequest = {
+        hello: 'world',
+      };
 
       await rfetch('https://ribbonstudios.com', {
         method: 'POST',
         body: expectedRequest,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json+v1',
         },
       });
 
       expect(fetchSpy).toHaveBeenCalledWith(new URL('https://ribbonstudios.com'), {
         method: 'POST',
-        body: expectedRequest,
+        body: JSON.stringify(expectedRequest),
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json+v1',
         },
       });
     });
