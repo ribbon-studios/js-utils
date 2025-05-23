@@ -26,7 +26,7 @@ Collection of generic javascript utilities curated by the Ribbon Studios Team~
     - [`rfetch.put`](#rfetchput)
     - [`rfetch.post`](#rfetchpost)
     - [`rfetch.patch`](#rfetchpatch)
-    - [`rfetch.remove`](#rfetchremove)
+    - [`rfetch.delete`](#rfetchdelete)
     - [`rfetch.interceptors`](#rfetchinterceptors)
     - [`rfetch.delimiters`](#rfetchdelimiters)
 
@@ -195,7 +195,7 @@ import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
 await rfetch.patch<MyExpectedResponse>('https://ribbonstudios.com');
 ```
 
-### `rfetch.remove`
+### `rfetch.delete`
 
 Shorthand for DELETE requests.
 
@@ -203,7 +203,7 @@ Shorthand for DELETE requests.
 import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
 
 // Shorthand for DELETE requests.
-await rfetch.remove<MyExpectedResponse>('https://ribbonstudios.com');
+await rfetch.delete<MyExpectedResponse>('https://ribbonstudios.com');
 ```
 
 ### `rfetch.interceptors`

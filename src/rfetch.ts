@@ -112,6 +112,20 @@ export async function rfetch<T = any>(
   );
 }
 
+/**
+ * Shorthand method for a DELETE request
+ *
+ * @param url The url you wish to fetch.
+ * @param options The request options.
+ * @returns The typed response or an error containing the `status` and the `content`
+ */
+rfetch.delete = <T>(url: string | URL, options?: RibbonFetchBodyOptions) => {
+  return rfetch<T>(url, {
+    ...options,
+    method: 'DELETE',
+  });
+};
+
 /* c8 ignore start */
 export namespace rfetch {
   /* c8 ignore end */
@@ -178,13 +192,10 @@ export namespace rfetch {
    * @param url The url you wish to fetch.
    * @param options The request options.
    * @returns The typed response or an error containing the `status` and the `content`
-   * @note This is named `remove` purely because `delete` is a reserved key
+   * @deprecated in favor of {@link rfetch.delete}
    */
   export async function remove<T>(url: string | URL, options?: RibbonFetchBodyOptions) {
-    return rfetch<T>(url, {
-      ...options,
-      method: 'DELETE',
-    });
+    return rfetch.delete<T>(url, options);
   }
 
   export async function delimiters(type: DelimiterType) {

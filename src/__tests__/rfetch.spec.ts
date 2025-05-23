@@ -326,6 +326,19 @@ describe('utils(Fetch)', () => {
     });
   });
 
+  describe('fn(rfetch.delete)', () => {
+    it('should be a shorthand for delete requests', async () => {
+      await rfetch.delete('https://ribbonstudios.com');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          method: 'DELETE',
+        })
+      );
+    });
+  });
+
   describe('fn(rfetch.remove)', () => {
     it('should be a shorthand for delete requests', async () => {
       await rfetch.remove('https://ribbonstudios.com');
