@@ -101,6 +101,8 @@ export async function rfetch<T = any>(
     : await response.text();
 
   if (response.ok) {
+    if (response.status === 204) return undefined;
+
     return content;
   }
 

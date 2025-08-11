@@ -124,6 +124,16 @@ describe('utils(Fetch)', () => {
       });
     });
 
+    it('should support No Content responses', async () => {
+      mockFetch({
+        status: 204,
+      });
+
+      const response = await rfetch('https://ribbonstudios.com');
+
+      expect(response).toEqual(undefined);
+    });
+
     it('should support already stringified json requests', async () => {
       const expectedRequest = JSON.stringify({
         hello: 'world',
