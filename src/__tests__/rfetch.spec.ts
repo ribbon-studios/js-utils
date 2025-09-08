@@ -362,12 +362,12 @@ describe('utils(Fetch)', () => {
     });
   });
 
-  describe('fn(rfetch.interceptors.add)', () => {
+  describe('fn(rfetch.interceptors.request.add)', () => {
     it('should support interceptors', async () => {
       const expectedUrl = new URL('https://ribbonstudios.com');
       const interceptor = vi.fn().mockImplementation((_, options) => options);
 
-      rfetch.interceptors.add(interceptor);
+      rfetch.interceptors.request.add(interceptor);
 
       await rfetch.get(expectedUrl);
 
@@ -389,7 +389,7 @@ describe('utils(Fetch)', () => {
         },
       }));
 
-      rfetch.interceptors.add(interceptor);
+      rfetch.interceptors.request.add(interceptor);
 
       await rfetch.get('https://ribbonstudios.com');
 
@@ -406,13 +406,13 @@ describe('utils(Fetch)', () => {
     });
   });
 
-  describe('fn(rfetch.interceptors.remove)', () => {
+  describe('fn(rfetch.interceptors.request.remove)', () => {
     it('should support removing interceptors', async () => {
       const expectedUrl = new URL('https://ribbonstudios.com');
       const interceptor = vi.fn().mockImplementation((_, options) => options);
 
-      rfetch.interceptors.add(interceptor);
-      rfetch.interceptors.remove(interceptor);
+      rfetch.interceptors.request.add(interceptor);
+      rfetch.interceptors.request.remove(interceptor);
 
       await rfetch.get(expectedUrl);
 
@@ -427,7 +427,7 @@ describe('utils(Fetch)', () => {
       const expectedUrl = new URL('https://ribbonstudios.com');
       const interceptor = vi.fn().mockImplementation((_, options) => options);
 
-      rfetch.interceptors.remove(interceptor);
+      rfetch.interceptors.request.remove(interceptor);
 
       await rfetch.get(expectedUrl);
 
@@ -439,15 +439,138 @@ describe('utils(Fetch)', () => {
     });
   });
 
-  describe('fn(rfetch.interceptors.clear)', () => {
+  describe('fn(rfetch.interceptors.request.clear)', () => {
     it('should support clearing the interceptors', async () => {
       const expectedUrl = new URL('https://ribbonstudios.com');
       const interceptor = vi.fn().mockImplementation((_, options) => options);
 
-      rfetch.interceptors.add(interceptor);
-      rfetch.interceptors.clear();
+      rfetch.interceptors.request.add(interceptor);
+      rfetch.interceptors.request.clear();
 
       await rfetch.get(expectedUrl);
+
+      expect(interceptor).not.toHaveBeenCalled();
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+  });
+
+  describe('fn(rfetch.interceptors.reject.add)', () => {
+    beforeEach(() => {
+      mockFetch({
+        ok: false,
+        status: 404,
+        json: vi.fn().mockResolvedValue('Oh no!'),
+      });
+    });
+
+    it('should support interceptors', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.reject.add(interceptor);
+
+      await expect(rfetch.get(expectedUrl)).rejects.toThrow(RibbonFetchError);
+
+      expect(interceptor).toHaveBeenCalledWith(
+        expectedUrl,
+        new RibbonFetchError({
+          status: 404,
+          content: 'Oh no!',
+        })
+      );
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+
+    it('should support interceptors that change the reject error', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const expectedError = new RibbonFetchError({
+        status: 401,
+        content: 'Oops!',
+      });
+      const interceptor = vi.fn().mockImplementation(() => expectedError);
+
+      rfetch.interceptors.reject.add(interceptor);
+
+      await expect(rfetch.get(expectedUrl)).rejects.toThrow(expectedError);
+
+      expect(interceptor).toHaveBeenCalledWith(
+        expectedUrl,
+        new RibbonFetchError({
+          status: 404,
+          content: 'Oh no!',
+        })
+      );
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+  });
+
+  describe('fn(rfetch.interceptors.reject.remove)', () => {
+    beforeEach(() => {
+      mockFetch({
+        ok: false,
+        status: 404,
+        json: vi.fn().mockResolvedValue('Oh no!'),
+      });
+    });
+
+    it('should support removing interceptors', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.reject.add(interceptor);
+      rfetch.interceptors.reject.remove(interceptor);
+
+      await expect(rfetch.get(expectedUrl)).rejects.toThrow(RibbonFetchError);
+
+      expect(interceptor).not.toHaveBeenCalled();
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+
+    it('should ignore removing interceptors that do not exist', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.reject.remove(interceptor);
+
+      await expect(rfetch.get(expectedUrl)).rejects.toThrow(RibbonFetchError);
+
+      expect(interceptor).not.toHaveBeenCalled();
+
+      expect(fetchSpy).toHaveBeenCalledWith(expectedUrl, {
+        method: 'GET',
+      });
+    });
+  });
+
+  describe('fn(rfetch.interceptors.reject.clear)', () => {
+    beforeEach(() => {
+      mockFetch({
+        ok: false,
+        status: 404,
+        json: vi.fn().mockResolvedValue('Oh no!'),
+      });
+    });
+
+    it('should support clearing the interceptors', async () => {
+      const expectedUrl = new URL('https://ribbonstudios.com');
+      const interceptor = vi.fn().mockImplementation((_, options) => options);
+
+      rfetch.interceptors.reject.add(interceptor);
+      rfetch.interceptors.reject.clear();
+
+      await expect(rfetch.get(expectedUrl)).rejects.toThrow(RibbonFetchError);
 
       expect(interceptor).not.toHaveBeenCalled();
 

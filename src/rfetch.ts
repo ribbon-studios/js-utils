@@ -20,14 +20,25 @@ export class RibbonFetchError<R> extends Error {
   }
 }
 
-export type RibbonFetchInterceptor = (url: URL, options: RequestInit) => RequestInit | Promise<RequestInit>;
+export type RibbonRequestInterceptor = (url: URL, options: RequestInit) => RequestInit | Promise<RequestInit>;
+export type RibbonResolveInterceptor = (url: URL, options: RequestInit) => RequestInit | Promise<RequestInit>;
+export type RibbonRejectInterceptor = (
+  url: URL,
+  error: RibbonFetchError<any>
+) => RibbonFetchError<any> | Promise<RibbonFetchError<any>>;
 
 export enum DelimiterType {
   COMMA,
   DUPLICATE,
 }
 
-let fetchInterceptors: RibbonFetchInterceptor[] = [];
+const fetchInterceptors: {
+  request: RibbonRequestInterceptor[];
+  reject: RibbonRejectInterceptor[];
+} = {
+  request: [],
+  reject: [],
+};
 let delimiter: DelimiterType = DelimiterType.DUPLICATE;
 
 /**
@@ -89,7 +100,7 @@ export async function rfetch<T = any>(
 
   const response = await fetch(
     internalURL,
-    await fetchInterceptors.reduce(
+    await fetchInterceptors.request.reduce(
       async (output, interceptor) => await interceptor(internalURL, await output),
       Promise.resolve(requestInit)
     )
@@ -106,11 +117,16 @@ export async function rfetch<T = any>(
     return content;
   }
 
+  const error = new RibbonFetchError({
+    status: response.status,
+    content,
+  });
+
   return Promise.reject(
-    new RibbonFetchError({
-      status: response.status,
-      content,
-    })
+    await fetchInterceptors.reject.reduce(
+      async (output, interceptor) => await interceptor(internalURL, await output),
+      Promise.resolve(error)
+    )
   );
 }
 
@@ -205,20 +221,45 @@ export namespace rfetch {
   }
 
   export const interceptors = {
-    add(interceptor: RibbonFetchInterceptor) {
-      fetchInterceptors.push(interceptor);
+    request: {
+      add(interceptor: RibbonRequestInterceptor) {
+        fetchInterceptors.request.push(interceptor);
+      },
+
+      remove(interceptor: RibbonRequestInterceptor) {
+        const index = fetchInterceptors.request.indexOf(interceptor);
+
+        if (index === -1) return;
+
+        fetchInterceptors.request.splice(index, 1);
+      },
+
+      clear() {
+        fetchInterceptors.request = [];
+      },
     },
 
-    remove(interceptor: RibbonFetchInterceptor) {
-      const index = fetchInterceptors.indexOf(interceptor);
+    reject: {
+      add(interceptor: RibbonRejectInterceptor) {
+        fetchInterceptors.reject.push(interceptor);
+      },
 
-      if (index === -1) return;
+      remove(interceptor: RibbonRejectInterceptor) {
+        const index = fetchInterceptors.reject.indexOf(interceptor);
 
-      fetchInterceptors.splice(index, 1);
+        if (index === -1) return;
+
+        fetchInterceptors.reject.splice(index, 1);
+      },
+
+      clear() {
+        fetchInterceptors.reject = [];
+      },
     },
 
     clear() {
-      fetchInterceptors = [];
+      fetchInterceptors.reject = [];
+      fetchInterceptors.request = [];
     },
   };
 
