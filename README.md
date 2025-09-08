@@ -27,7 +27,8 @@ Collection of generic javascript utilities curated by the Ribbon Studios Team~
     - [`rfetch.post`](#rfetchpost)
     - [`rfetch.patch`](#rfetchpatch)
     - [`rfetch.delete`](#rfetchdelete)
-    - [`rfetch.interceptors`](#rfetchinterceptors)
+    - [`rfetch.interceptors.request`](#rfetchinterceptorsrequest)
+    - [`rfetch.interceptors.reject`](#rfetchinterceptorsreject)
     - [`rfetch.delimiters`](#rfetchdelimiters)
 
 ## Promises
@@ -206,7 +207,7 @@ import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
 await rfetch.delete<MyExpectedResponse>('https://ribbonstudios.com');
 ```
 
-### `rfetch.interceptors`
+### `rfetch.interceptors.request`
 
 Useful for enhancing requests with additional information
 
@@ -217,9 +218,25 @@ const interceptor = (url: URL, options: RequestInit): RequestInit | Promise<Requ
   return options; // Return the modified options!
 };
 
-rfetch.interceptors.add(interceptor); // Add the interceptor
-rfetch.interceptors.remove(interceptor); // Remove the interceptor
-rfetch.interceptors.clear(); // Clear all interceptors
+rfetch.interceptors.request.add(interceptor); // Add the interceptor
+rfetch.interceptors.request.remove(interceptor); // Remove the interceptor
+rfetch.interceptors.request.clear(); // Clear all interceptors
+```
+
+### `rfetch.interceptors.reject`
+
+Useful for handling special cases when a failed request occurs
+
+```tsx
+import { rfetch, type RibbonFetchError } from '@ribbon-studios/js-utils';
+
+const interceptor = (url: URL, error: RibbonFetchError): RibbonFetchError | Promise<RibbonFetchError> => {
+  return error; // Return the modified error!
+};
+
+rfetch.interceptors.reject.add(interceptor); // Add the interceptor
+rfetch.interceptors.reject.remove(interceptor); // Remove the interceptor
+rfetch.interceptors.reject.clear(); // Clear all interceptors
 ```
 
 ### `rfetch.delimiters`
