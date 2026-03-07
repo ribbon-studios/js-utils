@@ -1,7 +1,7 @@
 {
   "name": "@ribbon-studios/js-utils",
   "version": "1.0.0",
-  "description": "Collection of generic javascript utilities curated by the Rainbow Cafe~",
+  "description": "Collection of generic javascript utilities curated by the Ribbon Studios Team~",
   "type": "module",
   "source": "src/*.ts",
   "main": "./dist/index.cjs",
