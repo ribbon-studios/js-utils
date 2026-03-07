@@ -14,7 +14,7 @@ export class RibbonFetchError<R> extends Error {
   public content: R;
 
   constructor({ status, content }: { status: number; content: R }) {
-    super(content);
+    super(content?.toString());
     this.status = status;
     this.content = content;
   }
