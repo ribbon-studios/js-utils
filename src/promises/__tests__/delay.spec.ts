@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { delay } from '../delay';
-import { afterEach } from 'node:test';
 
 describe('fn(delay)', () => {
   const time = async <T>(expectedTime: number, cb: () => Promise<T>, buffer: number = 5): Promise<T> => {
