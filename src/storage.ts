@@ -23,15 +23,15 @@ export class RibbonStorage {
    * Shorthands for getting / setting from {@link localStorage}
    */
   static local = {
-    get: RibbonStorage.get.bind(Storage, localStorage),
-    set: RibbonStorage.set.bind(Storage, localStorage),
+    get: <T>(key: string, defaultValue?: T) => RibbonStorage.get(localStorage, key, defaultValue),
+    set: <T>(key: string, value: T) => RibbonStorage.set(localStorage, key, value),
   };
 
   /**
    * Shorthands for getting / setting from {@link sessionStorage}
    */
   static session = {
-    get: RibbonStorage.get.bind(Storage, sessionStorage),
-    set: RibbonStorage.set.bind(Storage, sessionStorage),
+    get: <T>(key: string, defaultValue?: T) => RibbonStorage.get(sessionStorage, key, defaultValue),
+    set: <T>(key: string, value: T) => RibbonStorage.set(sessionStorage, key, value),
   };
 }
