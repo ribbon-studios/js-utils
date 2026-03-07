@@ -10,5 +10,6 @@ export default defineConfig(tseslint.configs.recommended, {
     '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'unused-imports/no-unused-imports': 'error',
+    'prefer-spread': 'off',
   },
 });
