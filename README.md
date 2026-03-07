@@ -30,6 +30,8 @@ Collection of generic javascript utilities curated by the Ribbon Studios Team~
     - [`rfetch.interceptors.request`](#rfetchinterceptorsrequest)
     - [`rfetch.interceptors.reject`](#rfetchinterceptorsreject)
     - [`rfetch.delimiters`](#rfetchdelimiters)
+- [Storage](#storage)
+  - [`RibbonStorage`](#ribbonstorage)
 
 ## Promises
 
@@ -282,6 +284,22 @@ try {
 
   throw error;
 }
+```
+
+## Storage
+
+### `RibbonStorage`
+
+A small wrapper around local / session storage that automatically stringifies and parses responses.
+
+```ts
+import { RibbonStorage } from '@ribbon-studios/js-utils';
+
+RibbonStorage.local.set('hello', 'world'); // Sets 'hello' key in localStorage to '"world"'
+RibbonStorage.local.get('hello'); // 'world'
+
+RibbonStorage.session.set('hello', 'world'); // Sets 'hello' key in sessionStorage to '"world"'
+RibbonStorage.session.get('hello'); // 'world'
 ```
 
 [_**Want to Contribute?**_](/CONTRIBUTING.md)
