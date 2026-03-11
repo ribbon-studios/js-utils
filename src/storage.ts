@@ -11,16 +11,18 @@ export class RibbonStorage {
   };
 
   static {
-    // Picks up localStorage changes from other tabs
-    window.addEventListener('storage', (event) => {
-      if (event.key === null) return;
+    if ('window' in globalThis) {
+      // Picks up localStorage changes from other tabs
+      window.addEventListener('storage', (event) => {
+        if (event.key === null) return;
 
-      RibbonStorage.$emit('change', {
-        type: event.storageArea === localStorage ? 'local' : 'session',
-        key: event.key,
-        value: event.newValue === null ? null : JSON.parse(event.newValue),
+        RibbonStorage.$emit('change', {
+          type: event.storageArea === localStorage ? 'local' : 'session',
+          key: event.key,
+          value: event.newValue === null ? null : JSON.parse(event.newValue),
+        });
       });
-    });
+    }
   }
 
   static get<T>(storage: globalThis.Storage, key: string, defaultValue: T): T;
