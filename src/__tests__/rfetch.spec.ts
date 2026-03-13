@@ -10,17 +10,21 @@ type DeepPartial<T> = T extends object
 describe('utils(Fetch)', () => {
   let fetchSpy: MockInstance<typeof fetch>;
 
-  const mockFetch = (overrides?: DeepPartial<Response>) => {
-    fetchSpy.mockResolvedValue({
+  const mockFetch = (overrides?: Omit<DeepPartial<Response>, 'headers'> & { headers?: Record<string, string> }) => {
+    const expectedResponse = {
       ok: true,
       text: vi.fn(),
       json: vi.fn(),
       ...overrides,
-      headers: {
-        get: vi.fn().mockReturnValue('application/json'),
+      headers: new Headers({
+        'Content-Type': 'application/json',
         ...overrides?.headers,
-      } as unknown as Headers,
-    } as unknown as Response);
+      }),
+    } as unknown as Response;
+
+    fetchSpy.mockResolvedValue(expectedResponse);
+
+    return expectedResponse;
   };
 
   beforeEach(() => {
@@ -223,7 +227,7 @@ describe('utils(Fetch)', () => {
       mockFetch({
         text: vi.fn().mockResolvedValue(expectedResponse),
         headers: {
-          get: vi.fn().mockReturnValue(null),
+          'Content-Type': 'text/plain',
         },
       });
 
@@ -260,6 +264,9 @@ describe('utils(Fetch)', () => {
         new RibbonFetchError({
           status: 500,
           content: expectedResponse,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+          }),
         })
       );
     });
@@ -279,6 +286,9 @@ describe('utils(Fetch)', () => {
         new RibbonFetchError({
           status: 500,
           content: expectedResponse,
+          headers: new Headers({
+            'Content-Type': 'application/json',
+          }),
         })
       );
     });
@@ -479,6 +489,9 @@ describe('utils(Fetch)', () => {
         new RibbonFetchError({
           status: 404,
           content: 'Oh no!',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+          }),
         })
       );
 
@@ -504,6 +517,9 @@ describe('utils(Fetch)', () => {
         new RibbonFetchError({
           status: 404,
           content: 'Oh no!',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+          }),
         })
       );
 

@@ -11,12 +11,14 @@ export type RibbonFetchBodyOptions = Omit<RibbonFetchOptions, 'method'>;
 
 export class RibbonFetchError<R> extends Error {
   public status: number;
+  public headers: Headers;
   public content: R;
 
-  constructor({ status, content }: { status: number; content: R }) {
+  constructor({ status, content, headers }: { status: number; content: R; headers?: Headers }) {
     super(content?.toString());
     this.status = status;
     this.content = content;
+    this.headers = headers ?? new Headers();
   }
 }
 
@@ -119,6 +121,7 @@ export async function rfetch<T = any>(
 
   const error = new RibbonFetchError({
     status: response.status,
+    headers: response.headers,
     content,
   });
 
